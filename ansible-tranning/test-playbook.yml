@@ -1,0 +1,9 @@
+- 
+  name: Test playbook
+  hosts: group1
+
+  tasks:
+    - name: Test ping
+      ping:
+
+
