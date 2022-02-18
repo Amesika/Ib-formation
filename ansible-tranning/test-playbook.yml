@@ -6,4 +6,50 @@
     - name: Test ping
       ping:
 
+    - name: Touch test
+      command: "touch /tmp/touch_test"
+
+    - name: Touch test2
+      become: yes
+      command: "touch /tmp/touch_test2"
+
+    - name: Echo
+      command: "echo Coucou depuis ansible"
+      register: cmd_out
+
+#    - debug: var=cmd_out
+#    - debug: msg='{{cmd_out.stdout}}'
+
+    - name: Shell exemple
+      shell: "echo Coucou depuis ansible > /tmp/shell_exemple"
+
+    - name: Change owner
+      become: yes
+      file:
+        path: /tmp/shell_exemple
+        owner: "root"
+
+    - name: Command with env var
+      command: touch $DIR/$FILENAME
+      environment:
+        DIR: /tmp
+        FILENAME: cmd_env_exemple
+
+    - name: Command with env var 2
+      command: touch $FILENAME
+      args:
+        chdir: $DIR
+      environment:
+        DIR: /tmp
+        FILENAME: cmd_env_exemple2
+
+    - name: Apt exemple (apache2)
+      become: yes
+      apt: 
+        name: apache2
+        state: absent
+        update_cache: yes
+
+
+
 

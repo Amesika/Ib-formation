@@ -1,0 +1,12 @@
+- name: Create MariaDb Container
+  tags: mariadb
+  docker_container:
+    name: mariadb
+    image: mariadb
+    state: started
+    restart: yes
+    ports:
+      - 3306:3306
+    env:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ansible

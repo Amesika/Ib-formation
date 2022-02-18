@@ -1,0 +1,22 @@
+- name: Install System Packages
+  apt: name={{item}} state=latest update_cache=yes
+  loop : ['apt-transport-https','ca-certificates','curl','gnupg','lsb-release']
+
+- name: Add docker GPG
+  apt_key: 
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add docker repo
+  apt_repository: 
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Install Docker Ce
+  apt: name=docker-ce state=latest update_cache=yes
+
+- name: Add vagrant user to docker group
+  tags: user_to_docker
+  user:
+    name: vagrant
+    groups: docker
