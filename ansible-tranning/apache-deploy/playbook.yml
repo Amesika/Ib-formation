@@ -1,0 +1,43 @@
+- 
+  name: Apache play
+  hosts: all
+  become: yes
+
+  vars:
+    users: ['ashe','garen','lux']
+    group: Fevill
+
+  tasks:
+    - name: Install Apache + php
+      apt: name={{item}} state=latest
+      loop: ['apache2','php','libapache2-mod-php','php-mysql']
+
+    - name: Start Apache
+      service: name=apache2 state=reloaded
+
+    - name: Create Group Fevill
+      group: name={{group}} state=present
+
+    - name: Create Users
+      user: name={{item}} state=present groups={{group}}
+      loop: "{{ users }}"
+
+    - name: Create user folder in Apache document root
+      file: path=/var/www/html/{{item}} state=directory
+      loop: "{{users}}"
+
+    - name: Copy php files
+      copy:
+        src: files/index.php
+        dest: /var/www/html/{{item}}
+        owner: "{{item}}"
+      loop: "{{users}}"
+
+-
+  name: Create MariaDb Container
+  hosts: all
+  become: yes #become_user: root
+  roles:
+    - docker
+    # - container
+
