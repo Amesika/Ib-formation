@@ -83,12 +83,46 @@ resource "aws_security_group" "infra1" {
     }
 
     ingress {
-        description = "Http from anywhere"
+        description = "Jenkins Service from anywhere"
+        from_port = 8080
+        to_port = 8080
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        description = "Nexus Service from anywhere"
+        from_port = 8081
+        to_port = 8081
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+        ingress {
+        description = "SonarQube Service 1/3 from anywhere"
         from_port = 80
         to_port = 80
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
+
+
+    ingress {
+        description = "SonarQube Service 2/3 from anywhere"
+        from_port = 9000
+        to_port = 9000
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+
+    ingress {
+        description = "SonarQube Service 3/3 from anywhere"
+        from_port = 9001
+        to_port = 9001
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
 
     egress {
         from_port = 0
@@ -127,7 +161,7 @@ resource "aws_eip" "infra1" {
     }
 }
 
-# 09 EC2 Web Server
+#09 EC2 Web Server
 resource "aws_instance" "infra1" {
     ami = var.ami_id
     instance_type = "t2.micro"
@@ -136,8 +170,8 @@ resource "aws_instance" "infra1" {
       device_index = 0
       network_interface_id = aws_network_interface.infra1.id
     }
-
-    user_data = file("install_apache.sh")
+    key_name = "Infra-key"
+    user_data = file("install.sh")
 
     tags = {
       Name = var.tag_name
